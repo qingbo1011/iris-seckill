@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/kataras/iris/v12"
+	logging "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -19,4 +20,16 @@ func main() {
 		ctx.ViewLayout("")
 		ctx.View("share/error.html")
 	})
+
+	// 注册控制器
+
+	// 启动服务
+	err := app.Run(
+		iris.Addr("127.0.0.1:8080"),
+		iris.WithoutServerError(iris.ErrServerClosed),
+		iris.WithOptimizations,
+	)
+	if err != nil {
+		logging.Info(err)
+	}
 }
