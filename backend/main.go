@@ -35,3 +35,7 @@ func main() {
 		logging.Info(err)
 	}
 }
+
+func init() {
+	conf.Init("../conf/config.ini")
+}
