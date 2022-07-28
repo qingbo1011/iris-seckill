@@ -16,3 +16,4 @@
 
 # goland
 ./.idea
+/conf/config.ini

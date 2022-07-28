@@ -1,6 +1,8 @@
 package main
 
 import (
+	"iris-seckill/conf"
+
 	"github.com/kataras/iris/v12"
 	logging "github.com/sirupsen/logrus"
 )
@@ -25,7 +27,7 @@ func main() {
 
 	// 启动服务
 	err := app.Run(
-		iris.Addr("127.0.0.1:8080"),
+		iris.Addr(conf.IrisAddr),
 		iris.WithoutServerError(iris.ErrServerClosed),
 		iris.WithOptimizations,
 	)
