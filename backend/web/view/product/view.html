@@ -22,10 +22,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {{range $i, $v := .productArray}}
+                            {{range $i, $v := .products}}
                             <tr>
                                 <td class="user-avatar cell-detail user-info">{{$v.ID}}</td>
-                                <td class="cell-detail"><img src="{{$v.ProductImage}}" alt="Avatar"> </td>
+                                <td class="cell-detail"><img src="{{$v.ProductImageUrl}}" alt="Avatar"> </td>
                                 <td class="milestone"> {{$v.ProductName}}
                                 </td>
                                 <td class="cell-detail">{{$v.ProductUrl}}</td>
