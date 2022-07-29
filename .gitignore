@@ -15,5 +15,5 @@
 # vendor/
 
 # goland
-./.idea
+.idea
 /conf/config.ini
