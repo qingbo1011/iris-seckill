@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
+	"iris-seckill/backend/web/controller"
 	"iris-seckill/conf"
 	"iris-seckill/db/mysql"
+	"iris-seckill/service"
 
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/mvc"
 	logging "github.com/sirupsen/logrus"
 )
 
@@ -25,6 +29,13 @@ func main() {
 	})
 
 	// 注册控制器
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	productService := service.NewProductService()
+	productParty := app.Party("/product")
+	productApp := mvc.New(productParty)
+	productApp.Register(ctx, productService)
+	productApp.Handle(new(controller.ProductController))
 
 	// 启动服务
 	err := app.Run(
