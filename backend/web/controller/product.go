@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"iris-seckill/model"
 	"iris-seckill/service"
 
 	"github.com/kataras/iris/v12"
@@ -13,7 +14,7 @@ type ProductController struct {
 }
 
 // GetAll 获取全部产品
-func (p ProductController) GetAll() (mvc.View, error) {
+func (p *ProductController) GetAll() (mvc.View, error) {
 	products, err := p.ProductService.GetAllProduct()
 	if err != nil {
 		return mvc.View{}, err
@@ -24,4 +25,15 @@ func (p ProductController) GetAll() (mvc.View, error) {
 			"products": products,
 		},
 	}, nil
+}
+
+// PostUpdate 修改产品
+func (p *ProductController) PostUpdate() {
+	product := &model.Product{}
+	p.Ctx.Request().ParseForm()
+	err := p.ProductService.UpdateProduct(product)
+	if err != nil {
+		p.Ctx.Application().Logger().Debug(err)
+	}
+	p.Ctx.Redirect("/product/all")
 }
