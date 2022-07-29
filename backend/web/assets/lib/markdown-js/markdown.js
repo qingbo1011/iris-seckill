@@ -10,7 +10,7 @@
 /**
  *  class Markdown
  *
- *  Markdown processing in Javascript done right. We have very particular views
+ *  Markdown processing in Javascript done right. We have very particular view
  *  on what constitutes 'right' which include:
  *
  *  - produces well-formed HTML (this means that em and strong nesting is

@@ -422,10 +422,10 @@ CodeMirror.defineMode("perl",function(){
                 setservent                      :1,     // - prepare services file for use
                 setsockopt                      :1,     // - set some socket options
                 shift                           :1,     // - remove the first element of an array, and return it
-                shmctl                          :1,     // - SysV shared memory operations
-                shmget                          :1,     // - get SysV shared memory segment identifier
-                shmread                         :1,     // - read SysV shared memory
-                shmwrite                        :1,     // - write SysV shared memory
+                shmctl                          :1,     // - SysV share memory operations
+                shmget                          :1,     // - get SysV share memory segment identifier
+                shmread                         :1,     // - read SysV share memory
+                shmwrite                        :1,     // - write SysV share memory
                 shutdown                        :1,     // - close down just half of a socket connection
                 'sin'                           :1,     // - return the sine of a number
                 sleep                           :1,     // - block for some number of seconds

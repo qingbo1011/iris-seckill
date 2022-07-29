@@ -26,7 +26,7 @@
  *
  * Language definition from
  * http://cran.r-project.org/doc/manuals/R-lang.html.
- * Many of the regexes are shared  with the pygments SLexer,
+ * Many of the regexes are share  with the pygments SLexer,
  * http://pygments.org/.
  *
  * Original: https://raw.github.com/jrnold/prettify-lang-r-bugs/master/lang-r.js

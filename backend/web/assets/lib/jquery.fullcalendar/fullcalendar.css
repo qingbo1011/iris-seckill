@@ -874,7 +874,7 @@ a.fc-more:hover {
 
 .fc-basicWeek-view .fc-content-skeleton,
 .fc-basicDay-view .fc-content-skeleton {
-	/* we are sure there are no day numbers in these views, so... */
+	/* we are sure there are no day numbers in these view, so... */
 	padding-top: 1px; /* add a pixel to make sure there are 2px padding above events */
 	padding-bottom: 1em; /* ensure a space at bottom of cell for user selecting/clicking */
 }

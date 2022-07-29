@@ -17,7 +17,7 @@ func main() {
 	app := iris.New()
 	app.Logger().SetLevel("debug")
 	// 注册模板
-	tmplate := iris.HTML("./backend/web/assets", ".html").Layout("share/layout").Reload(true)
+	tmplate := iris.HTML("./backend/web/view", ".html").Layout("share/layout.html").Reload(true)
 	app.RegisterView(tmplate)
 	// 设置模板目标
 	app.HandleDir("/assets", "./backend/web/assets")

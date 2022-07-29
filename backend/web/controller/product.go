@@ -37,3 +37,11 @@ func (p *ProductController) PostUpdate() {
 	}
 	p.Ctx.Redirect("/product/all")
 }
+
+// GetAdd 显示添加产品的页面
+func (p *ProductController) GetAdd() mvc.View {
+	return mvc.View{
+		Name: "product/add.html",
+	}
+
+}

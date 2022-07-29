@@ -741,7 +741,7 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
     blockKeywords: words("case catch class dynamic else finally for function if interface module new object switch try while"),
     defKeywords: words("class dynamic function interface module object package value"),
     builtin: words("abstract actual aliased annotation by default deprecated doc final formal late license" +
-                   " native optional sealed see serializable shared suppressWarnings tagged throws variable"),
+                   " native optional sealed see serializable share suppressWarnings tagged throws variable"),
     isPunctuationChar: /[\[\]{}\(\),;\:\.`]/,
     isOperatorChar: /[+\-*&%=<>!?|^~:\/]/,
     numberStart: /[\d#$]/,

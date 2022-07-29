@@ -3081,7 +3081,7 @@ jQuery.event = {
 		return event.result;
 	},
 
-	// Includes some event props shared by KeyEvent and MouseEvent
+	// Includes some event props share by KeyEvent and MouseEvent
 	// *** attrChange attrName relatedNode srcElement  are not normalized, non-W3C, deprecated, will be removed in 1.8 ***
 	props: "attrChange attrName relatedNode srcElement altKey bubbles cancelable ctrlKey currentTarget eventPhase metaKey relatedTarget shiftKey target timeStamp view which".split(" "),
 

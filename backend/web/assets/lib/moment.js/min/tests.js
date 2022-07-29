@@ -63722,8 +63722,8 @@
     test('library getter locale array and substrings', function (assert) {
         assert.equal(moment.locale(['en-CH', 'fr']), 'en', 'prefer root locale to shallower ones');
         assert.equal(moment.locale(['en-gb-leeds', 'en-CA']), 'en-gb', 'prefer root locale to shallower ones');
-        assert.equal(moment.locale(['en-fake', 'en-CA']), 'en-ca', 'prefer alternatives with shared roots');
-        assert.equal(moment.locale(['en-fake', 'en-fake2', 'en-ca']), 'en-ca', 'prefer alternatives with shared roots');
+        assert.equal(moment.locale(['en-fake', 'en-CA']), 'en-ca', 'prefer alternatives with share roots');
+        assert.equal(moment.locale(['en-fake', 'en-fake2', 'en-ca']), 'en-ca', 'prefer alternatives with share roots');
         assert.equal(moment.locale(['fake-CA', 'fake-MX', 'fr']), 'fr', 'always find something if possible');
         assert.equal(moment.locale(['fake-CA', 'fake-MX', 'fr']), 'fr', 'always find something if possible');
         assert.equal(moment.locale(['fake-CA', 'fake-MX', 'fr-fake-fake-fake']), 'fr', 'always find something if possible');
