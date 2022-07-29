@@ -2,6 +2,7 @@ package main
 
 import (
 	"iris-seckill/conf"
+	"iris-seckill/db/mysql"
 
 	"github.com/kataras/iris/v12"
 	logging "github.com/sirupsen/logrus"
@@ -38,4 +39,5 @@ func main() {
 
 func init() {
 	conf.Init("../conf/config.ini")
+	mysql.Init()
 }
