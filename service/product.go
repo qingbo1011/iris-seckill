@@ -24,36 +24,30 @@ func NewProductService() IProductService {
 // GetProductByID 根据产品ID查询产品
 func (p *ProductService) GetProductByID(productID int64) (*model.Product, error) {
 	var product model.Product
-	err := mysql.MysqlDB.Where("product_id = ?", productID).First(&product).Error()
-	if err != nil {
-		return nil, err
-	}
+	mysql.MysqlDB.Where("product_id = ?", productID).First(&product)
 	return &product, nil
 }
 
 // GetAllProduct 查询所有产品
 func (p *ProductService) GetAllProduct() (res []*model.Product, err error) {
-	err = mysql.MysqlDB.Find(&res).Error()
+	mysql.MysqlDB.Find(&res)
 	return
 }
 
 // DeleteProductByID 根据产品ID删除产品
 func (p *ProductService) DeleteProductByID(productID int64) error {
-	err := mysql.MysqlDB.Where("product_id = ?", productID).Delete(&model.Product{}).Error()
-	return err
+	mysql.MysqlDB.Where("product_id = ?", productID).Delete(&model.Product{})
+	return nil
 }
 
 // InsertProduct 插入产品
 func (p *ProductService) InsertProduct(product *model.Product) (int64, error) {
-	err := mysql.MysqlDB.Create(product).Error()
-	if err != nil {
-		return 0, err
-	}
+	mysql.MysqlDB.Create(product)
 	return product.ProductID, nil
 }
 
 // UpdateProduct 更新产品
 func (p *ProductService) UpdateProduct(product *model.Product) error {
-	err := mysql.MysqlDB.Save(product).Error()
-	return err
+	mysql.MysqlDB.Save(product)
+	return nil
 }
