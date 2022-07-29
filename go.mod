@@ -7,6 +7,7 @@ require github.com/kataras/iris/v12 v12.2.0-beta4.0.20220726083256-8c7399229eca
 require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/sirupsen/logrus v1.8.1
+	gopkg.in/ini.v1 v1.66.6
 )
 
 require (
@@ -19,6 +20,7 @@ require (
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/flosch/pongo2/v4 v4.0.2 // indirect
+	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
@@ -52,6 +54,5 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20220411224347-583f2d630306 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
-	gopkg.in/ini.v1 v1.66.6 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
