@@ -43,3 +43,10 @@ func (c *UserController) PostRegister() {
 	c.Ctx.Redirect("/user/login")
 	return
 }
+
+// GetLogin 获取登录页面
+func (c *UserController) GetLogin() mvc.View {
+	return mvc.View{
+		Name: "user/login.html",
+	}
+}
