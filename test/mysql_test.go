@@ -56,3 +56,15 @@ func TestUpdateProduct(t *testing.T) {
 		logging.Info(err)
 	}
 }
+
+func TestInsertOrder(t *testing.T) {
+	order := model.Order{
+		UserID:      1001,
+		ProductID:   1001,
+		OrderStatus: 2,
+	}
+	err := mysql.MysqlDB.Create(&order).Error
+	if err != nil {
+		logging.Info(err)
+	}
+}

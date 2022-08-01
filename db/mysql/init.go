@@ -30,7 +30,7 @@ func Init() {
 	db.DB().SetMaxOpenConns(conf.MysqlMaxOpenConns)       // 设置数据库连接最大打开数。
 	db.DB().SetConnMaxLifetime(conf.MysqlConnMaxLifetime) // 设置可重用连接的最长时间
 	// 自动迁移
-	db.AutoMigrate(&model.Product{})
+	db.AutoMigrate(&model.Product{}, &model.Order{})
 
 	MysqlDB = db
 }

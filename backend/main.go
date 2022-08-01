@@ -31,11 +31,18 @@ func main() {
 	// 注册控制器
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
 	productService := service.NewProductService()
 	productParty := app.Party("/product")
 	productApp := mvc.New(productParty)
 	productApp.Register(ctx, productService)
 	productApp.Handle(new(controller.ProductController))
+
+	orderService := service.NewOrderService()
+	orderParty := app.Party("/order")
+	orderApp := mvc.New(orderParty)
+	orderApp.Register(ctx, orderService)
+	orderApp.Handle(new(controller.OrderController))
 
 	// 启动服务
 	err := app.Run(
