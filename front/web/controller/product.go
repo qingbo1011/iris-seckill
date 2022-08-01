@@ -17,6 +17,7 @@ type ProductController struct {
 
 // GetDetail 获取商品详情信息页面
 func (p *ProductController) GetDetail() mvc.View {
+
 	product, err := p.ProductService.GetProductByID(2) // 这里product_id写死了
 	if err != nil {
 		p.Ctx.Application().Logger().Error(err)
