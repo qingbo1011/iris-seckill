@@ -4,6 +4,7 @@ import (
 	"context"
 	"iris-seckill/conf"
 	"iris-seckill/db/mysql"
+	"iris-seckill/front/middleware"
 	"iris-seckill/front/web/controller"
 	"iris-seckill/service"
 	"time"
@@ -50,6 +51,7 @@ func main() {
 	productService := service.NewProductService()
 	orderService := service.NewOrderService()
 	productParty := app.Party("/product")
+	productParty.Use(middleware.AuthConProduct)
 	productApp := mvc.New(productParty)
 	productApp.Register(productService, orderService)
 	productApp.Handle(new(controller.ProductController))

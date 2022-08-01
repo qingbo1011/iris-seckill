@@ -70,6 +70,6 @@ func (c *UserController) PostLogin() mvc.Response {
 	util.GlobalCookie(c.Ctx, "uid", strconv.FormatInt(int64(user.ID), 10))
 	c.Session.Set("userID", strconv.FormatInt(int64(user.ID), 10))
 	return mvc.Response{
-		Path: "/product/",
+		Path: "/product/detail",
 	}
 }
