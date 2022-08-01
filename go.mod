@@ -2,8 +2,6 @@ module iris-seckill
 
 go 1.18
 
-require github.com/kataras/iris/v12 v12.2.0-beta4.0.20220726083256-8c7399229eca
-
 require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/sirupsen/logrus v1.8.1
