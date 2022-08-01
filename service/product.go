@@ -40,7 +40,7 @@ func (p *ProductService) DeleteProductByID(id uint) error {
 	return err
 }
 
-// InsertProduct 插入产品
+// InsertProduct 新增产品
 func (p *ProductService) InsertProduct(product *model.Product) (uint, error) {
 	err := mysql.MysqlDB.Create(product).Error
 	return product.ID, err

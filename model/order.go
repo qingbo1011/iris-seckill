@@ -4,7 +4,8 @@ import "github.com/jinzhu/gorm"
 
 type Order struct {
 	gorm.Model
-	UserId      uint
+	//OrderID     uint
+	UserID      uint
 	ProductID   uint
 	OrderStatus int8
 }
