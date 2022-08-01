@@ -8,7 +8,8 @@ import (
 )
 
 var (
-	IrisAddr string
+	IrisAddrBackend string
+	IrisAddrFront   string
 
 	MysqlHost            string
 	MysqlPort            string
@@ -33,7 +34,8 @@ func Init(path string) {
 }
 
 func loadService(file *ini.File) {
-	IrisAddr = file.Section("service").Key("IrisAddr").MustString("127.0.0.1:8080")
+	IrisAddrBackend = file.Section("service").Key("IrisAddrBackend").MustString("127.0.0.1:8080")
+	IrisAddrFront = file.Section("service").Key("IrisAddrFront").MustString("127.0.0.1:8082")
 }
 
 func loadMysql(file *ini.File) {

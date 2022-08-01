@@ -46,7 +46,7 @@ func main() {
 
 	// 启动服务
 	err := app.Run(
-		iris.Addr(conf.IrisAddr),
+		iris.Addr(conf.IrisAddrBackend),
 		iris.WithoutServerError(iris.ErrServerClosed),
 		iris.WithOptimizations,
 	)
