@@ -41,10 +41,18 @@ func main() {
 	// 注册控制器
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+
 	userService := service.NewService()
 	userApp := mvc.New(app.Party("/user"))
 	userApp.Register(userService, ctx, sess.Start)
 	userApp.Handle(new(controller.UserController))
+
+	productService := service.NewProductService()
+	orderService := service.NewOrderService()
+	productParty := app.Party("/product")
+	productApp := mvc.New(productParty)
+	productApp.Register(productService, orderService)
+	productApp.Handle(new(controller.ProductController))
 
 	// 启动服务
 	err := app.Run(
