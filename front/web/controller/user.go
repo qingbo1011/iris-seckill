@@ -3,6 +3,8 @@ package controller
 import (
 	"iris-seckill/model"
 	"iris-seckill/service"
+	"iris-seckill/util"
+	"strconv"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
@@ -48,5 +50,26 @@ func (c *UserController) PostRegister() {
 func (c *UserController) GetLogin() mvc.View {
 	return mvc.View{
 		Name: "user/login.html",
+	}
+}
+
+// PostLogin 用户登陆接口
+func (c *UserController) PostLogin() mvc.Response {
+	//1.获取用户提交的表单信息
+	var (
+		userName = c.Ctx.FormValue("userName")
+		password = c.Ctx.FormValue("password")
+	)
+	//2、验证账号密码正确
+	user, ok := c.Service.IsPwdSuccess(userName, password)
+	if !ok {
+		return mvc.Response{
+			Path: "/user/login",
+		}
+	}
+	util.GlobalCookie(c.Ctx, "uid", strconv.FormatInt(int64(user.ID), 10))
+	c.Session.Set("userID", strconv.FormatInt(int64(user.ID), 10))
+	return mvc.Response{
+		Path: "/product/",
 	}
 }
