@@ -76,13 +76,19 @@ func (p *ProductController) GetManager() mvc.View {
 	}
 }
 
-//// PostUpdate 修改产品
-//func (p *ProductController) PostUpdate() {
-//	product := &model.Product{}
-//	err := p.Ctx.ReadForm(&productReq)
-//	err = p.ProductService.UpdateProduct(product)
-//	if err != nil {
-//		p.Ctx.Application().Logger().Debug(err)
-//	}
-//	p.Ctx.Redirect("/product/all")
-//}
+// PostUpdate 修改产品
+func (p *ProductController) PostUpdate() {
+	productReq := request.ProductReq{}
+	err := p.Ctx.ReadForm(&productReq)
+	product := model.Product{
+		ProductName:     productReq.ProductName,
+		ProductNum:      productReq.ProductNum,
+		ProductImageUrl: productReq.ProductImageUrl,
+		ProductUrl:      productReq.ProductUrl,
+	}
+	err = p.ProductService.UpdateProduct(&product)
+	if err != nil {
+		p.Ctx.Application().Logger().Debug(err)
+	}
+	p.Ctx.Redirect("/product/all")
+}

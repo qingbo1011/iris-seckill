@@ -8,7 +8,7 @@ import (
 type IProductService interface {
 	GetProductByID(uint) (*model.Product, error)
 	GetAllProduct() ([]*model.Product, error)
-	DeleteProductByID(uint) error
+	DeleteProductByID(string) error
 	InsertProduct(product *model.Product) (uint, error)
 	UpdateProduct(product *model.Product) error
 }
@@ -34,9 +34,9 @@ func (p *ProductService) GetAllProduct() (res []*model.Product, err error) {
 	return
 }
 
-// DeleteProductByID 根据产品ID删除产品
-func (p *ProductService) DeleteProductByID(id uint) error {
-	err := mysql.MysqlDB.Where("id = ?", id).Delete(&model.Product{}).Error
+// DeleteProductByID 根据产品名称删除产品
+func (p *ProductService) DeleteProductByID(name string) error {
+	err := mysql.MysqlDB.Where("product_name = ?", name).Delete(&model.Product{}).Error
 	return err
 }
 
@@ -46,8 +46,8 @@ func (p *ProductService) InsertProduct(product *model.Product) (uint, error) {
 	return product.ID, err
 }
 
-// UpdateProduct 更新产品（注意下面的id，到时候写的时候要修改一下）
+// UpdateProduct 更新产品
 func (p *ProductService) UpdateProduct(product *model.Product) error {
-	err := mysql.MysqlDB.Model(&model.Product{}).Where("id = ?", 2).Updates(product).Error
+	err := mysql.MysqlDB.Model(&model.Product{}).Where("product_name = ?", product.ProductName).Updates(product).Error
 	return err
 }
