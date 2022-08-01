@@ -92,3 +92,19 @@ func (p *ProductController) PostUpdate() {
 	}
 	p.Ctx.Redirect("/product/all")
 }
+
+// GetDelete 删除产品
+func (p *ProductController) GetDelete() {
+	idStr := p.Ctx.URLParam("id")
+	id, err := strconv.ParseUint(idStr, 10, 0) // string转10进制的uint
+	if err != nil {
+		p.Ctx.Application().Logger().Debug(err)
+	}
+	err = p.ProductService.DeleteProductByID(uint(id))
+	if err != nil {
+		p.Ctx.Application().Logger().Debug(err)
+		p.Ctx.Application().Logger().Debug("删除商品失败，ID为：" + idStr)
+	}
+	p.Ctx.Application().Logger().Debug("删除商品成功，ID为：" + idStr)
+	p.Ctx.Redirect("/product/all")
+}
