@@ -51,7 +51,8 @@ func (o *OrderService) GetAllOrder() (res []*model.Order, err error) {
 	return
 }
 
-func (o *OrderService) GetAllOrderInfo() (orderMap map[int]map[string]string, err error) {
+func (o *OrderService) GetAllOrderInfo() (map[int]map[string]string, error) {
+	orderMap := make(map[int]map[string]string, 0)
 	orders, err := o.GetAllOrder()
 	if err != nil {
 		return nil, err
@@ -59,5 +60,5 @@ func (o *OrderService) GetAllOrderInfo() (orderMap map[int]map[string]string, er
 	for i, _ := range orders {
 		orderMap[i] = map[string]string{"用户名order.UserID": "产品order.ProductID"}
 	}
-	return
+	return orderMap, nil
 }
