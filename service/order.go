@@ -11,7 +11,7 @@ type IOrderService interface {
 	UpdateOrder(*model.Order) error
 	InsertOrder(*model.Order) (uint, error)
 	GetAllOrder() ([]*model.Order, error)
-	GetAllOrderInfo() (map[int]map[string]string, error)
+	GetAllOrderInfo() (map[uint]map[string]string, error)
 }
 
 type OrderService struct {
@@ -51,14 +51,14 @@ func (o *OrderService) GetAllOrder() (res []*model.Order, err error) {
 	return
 }
 
-func (o *OrderService) GetAllOrderInfo() (map[int]map[string]string, error) {
-	orderMap := make(map[int]map[string]string, 0)
+func (o *OrderService) GetAllOrderInfo() (map[uint]map[string]string, error) {
+	orderMap := make(map[uint]map[string]string, 0)
 	orders, err := o.GetAllOrder()
 	if err != nil {
 		return nil, err
 	}
-	for i, _ := range orders {
-		orderMap[i] = map[string]string{"用户名order.UserID": "产品order.ProductID"}
+	for _, order := range orders {
+		orderMap[order.ID] = map[string]string{"用户名order.UserID": "产品order.ProductID"}
 	}
 	return orderMap, nil
 }
