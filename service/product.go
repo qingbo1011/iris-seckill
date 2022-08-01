@@ -6,9 +6,9 @@ import (
 )
 
 type IProductService interface {
-	GetProductByID(int64) (*model.Product, error)
+	GetProductByID(uint) (*model.Product, error)
 	GetAllProduct() ([]*model.Product, error)
-	DeleteProductByID(int64) error
+	DeleteProductByID(uint) error
 	InsertProduct(product *model.Product) (uint, error)
 	UpdateProduct(product *model.Product) error
 }
@@ -22,7 +22,7 @@ func NewProductService() IProductService {
 }
 
 // GetProductByID 根据产品ID查询产品
-func (p *ProductService) GetProductByID(id int64) (*model.Product, error) {
+func (p *ProductService) GetProductByID(id uint) (*model.Product, error) {
 	var product model.Product
 	err := mysql.MysqlDB.Where("id = ?", id).First(&product).Error
 	return &product, err
@@ -35,7 +35,7 @@ func (p *ProductService) GetAllProduct() (res []*model.Product, err error) {
 }
 
 // DeleteProductByID 根据产品ID删除产品
-func (p *ProductService) DeleteProductByID(id int64) error {
+func (p *ProductService) DeleteProductByID(id uint) error {
 	err := mysql.MysqlDB.Where("id = ?", id).Delete(&model.Product{}).Error
 	return err
 }
