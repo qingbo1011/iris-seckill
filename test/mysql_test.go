@@ -68,3 +68,12 @@ func TestInsertOrder(t *testing.T) {
 		logging.Info(err)
 	}
 }
+
+func TestSelectUserByName(t *testing.T) {
+	var user model.User
+	err := mysql.MysqlDB.Where("user_name = ?", "张三").First(&user).Error
+	if err != nil {
+		logging.Info(err)
+	}
+	fmt.Println(user)
+}

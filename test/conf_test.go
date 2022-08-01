@@ -8,7 +8,7 @@ import (
 
 func TestConfig(t *testing.T) {
 	conf.Init("../conf/config.ini")
-	fmt.Println(conf.IrisAddr)
+	fmt.Println(conf.IrisAddrBackend)
 	fmt.Println(conf.MysqlHost)
 
 }
