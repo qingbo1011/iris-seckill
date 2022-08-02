@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"iris-seckill/model"
 	"iris-seckill/service"
 	"iris-seckill/util"
@@ -69,8 +70,14 @@ func (c *UserController) PostLogin() mvc.Response {
 	}
 	// 3.写入用户ID到cookie中
 	util.GlobalCookie(c.Ctx, "uid", strconv.FormatInt(int64(user.ID), 10))
-	c.Session.Set("userID", strconv.FormatInt(int64(user.ID), 10))
+	uidByte := []byte(strconv.FormatInt(int64(user.ID), 10))
+	uidString, err := util.EnPwdCode(uidByte)
+	if err != nil {
+		fmt.Println(err)
+	}
+	util.GlobalCookie(c.Ctx, "sign", uidString) // 写入用户浏览器
+
 	return mvc.Response{
-		Path: "/product/detail",
+		Path: "/product/",
 	}
 }
