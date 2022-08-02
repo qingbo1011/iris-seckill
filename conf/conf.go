@@ -21,6 +21,8 @@ var (
 	MysqlMaxIdleConns    int
 	MysqlMaxOpenConns    int
 	MysqlConnMaxLifetime time.Duration
+
+	RedisHost string
 )
 
 func Init(path string) {
@@ -31,6 +33,7 @@ func Init(path string) {
 
 	loadService(file)
 	loadMysql(file)
+	loadRedis(file)
 }
 
 func loadService(file *ini.File) {
@@ -53,4 +56,12 @@ func loadMysql(file *ini.File) {
 	MysqlMaxIdleConns = section.Key("MysqlMaxIdleConns").MustInt(20)
 	MysqlMaxOpenConns = section.Key("MysqlMaxOpenConns").MustInt(100)
 	MysqlConnMaxLifetime = time.Duration(section.Key("MysqlConnMaxLifetime").MustInt(30)) * time.Second
+}
+
+func loadRedis(file *ini.File) {
+	section, err := file.GetSection("redis")
+	if err != nil {
+		logging.Fatalln(err)
+	}
+	RedisHost = section.Key("RedisHost").String()
 }

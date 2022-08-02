@@ -3,9 +3,130 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"iris-seckill/conf"
 	"iris-seckill/util"
 	"net/http"
+	"strconv"
+	"sync"
 )
+
+var hostArray = []string{conf.RedisHost} // 设置集群地址，最好是内网IP
+
+var localHost = "127.0.0.1"
+
+var port = "8081"
+
+var hashConsistent *util.Consistent
+
+//创建全局变量
+var accessControl = &AccessControl{sourcesArray: make(map[int]any)}
+
+// AccessControl 存放控制信息
+type AccessControl struct {
+	sourcesArray map[int]any // 用来存放用户想要存放的信息
+	sync.RWMutex             // map是并发不完全的，这里加上读写锁
+}
+
+// GetNewRecord 获取制定的数据
+func (m *AccessControl) GetNewRecord(uid int) any {
+	m.RWMutex.RLock()
+	defer m.RWMutex.RUnlock()
+	data := m.sourcesArray[uid]
+	return data
+}
+
+// SetNewRecord 设置记录
+func (m *AccessControl) SetNewRecord(uid int) {
+	m.RWMutex.Lock()
+	defer m.RWMutex.Unlock()
+	m.sourcesArray[uid] = "hello qingbo1011.top"
+}
+
+// GetDistributedRight 将请求分发到服务器
+func (m *AccessControl) GetDistributedRight(req *http.Request) bool {
+	// 获取用户UID
+	uid, err := req.Cookie("uid")
+	if err != nil {
+		return false
+	}
+
+	//采用一致性hash算法，根据用户ID，判断获取具体机器
+	hostRequest, err := hashConsistent.Get(uid.Value)
+	if err != nil {
+		return false
+	}
+
+	// 判断是否为本机
+	if hostRequest == localHost {
+		return m.GetDataFromMap(uid.Value) // 执行本机数据读取和校验
+	} else {
+		return GetDataFromOtherMap(hostRequest, req) // 不是本机充当代理访问数据返回结果
+	}
+}
+
+// GetDataFromMap 获取本机map，并且处理业务逻辑，返回的结果类型为bool类型
+func (m *AccessControl) GetDataFromMap(uid string) (isOk bool) {
+	uidInt, err := strconv.Atoi(uid)
+	if err != nil {
+		return false
+	}
+	data := m.GetNewRecord(uidInt)
+
+	// 执行逻辑判断
+	if data != nil {
+		return true
+	}
+	return
+}
+
+// GetDataFromOtherMap 获取其它节点处理结果
+func GetDataFromOtherMap(host string, request *http.Request) bool {
+	// 获取Uid
+	uidPre, err := request.Cookie("uid")
+	if err != nil {
+		return false
+	}
+	// 获取sign
+	uidSign, err := request.Cookie("sign")
+	if err != nil {
+		return false
+	}
+
+	// 模拟接口访问，
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "http://"+host+":"+port+"/check", nil)
+	if err != nil {
+		return false
+	}
+
+	// 手动指定，排查多余cookies
+	cookieUid := &http.Cookie{Name: "uid", Value: uidPre.Value, Path: "/"}
+	cookieSign := &http.Cookie{Name: "sign", Value: uidSign.Value, Path: "/"}
+	// 添加cookie到模拟的请求中
+	req.AddCookie(cookieUid)
+	req.AddCookie(cookieSign)
+
+	// 获取返回结果
+	response, err := client.Do(req)
+	if err != nil {
+		return false
+	}
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return false
+	}
+
+	// 判断状态
+	if response.StatusCode == 200 {
+		if string(body) == "true" {
+			return true
+		} else {
+			return false
+		}
+	}
+	return false
+}
 
 func main() {
 	// 负载均衡器设置
@@ -19,7 +140,6 @@ func main() {
 	http.HandleFunc("/check", filter.Handle(Check))
 	//启动服务
 	http.ListenAndServe(":8083", nil)
-
 }
 
 // Check 执行正常业务逻辑
