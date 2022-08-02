@@ -7,11 +7,9 @@ import (
 	"iris-seckill/front/middleware"
 	"iris-seckill/front/web/controller"
 	"iris-seckill/service"
-	"time"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
-	"github.com/kataras/iris/v12/sessions"
 	logging "github.com/sirupsen/logrus"
 )
 
@@ -33,18 +31,13 @@ func main() {
 		ctx.View("shared/error.html")
 	})
 
-	sess := sessions.New(sessions.Config{
-		Cookie:  "AdminCookie",
-		Expires: 600 * time.Minute,
-	})
-
 	// 注册控制器
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	userService := service.NewService()
 	userApp := mvc.New(app.Party("/user"))
-	userApp.Register(userService, ctx, sess.Start)
+	userApp.Register(userService, ctx)
 	userApp.Handle(new(controller.UserController))
 
 	productService := service.NewProductService()
