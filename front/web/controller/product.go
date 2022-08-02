@@ -3,12 +3,71 @@ package controller
 import (
 	"iris-seckill/model"
 	"iris-seckill/service"
+	"os"
+	"path/filepath"
 	"strconv"
+	"text/template"
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/kataras/iris/v12/sessions"
 )
+
+var (
+	//生成的Html保存目录
+	htmlOutPath = "./front/web/htmlProductShow/"
+	//静态文件模版目录
+	templatePath = "./front/web/views/template/"
+)
+
+// GetGenerateHtml 生成前端静态页面
+func (p *ProductController) GetGenerateHtml() {
+	productString := p.Ctx.URLParam("productID")
+	productID, err := strconv.Atoi(productString)
+	if err != nil {
+		p.Ctx.Application().Logger().Debug(err)
+	}
+
+	//1.获取模版
+	contenstTmp, err := template.ParseFiles(filepath.Join(templatePath, "product.html"))
+	if err != nil {
+		p.Ctx.Application().Logger().Debug(err)
+	}
+	//2.获取html生成路径
+	fileName := filepath.Join(htmlOutPath, "htmlProduct.html")
+
+	//3.获取模版渲染数据
+	product, err := p.ProductService.GetProductByID(uint(productID))
+	if err != nil {
+		p.Ctx.Application().Logger().Debug(err)
+	}
+	//4.生成静态文件
+	generateStaticHtml(p.Ctx, contenstTmp, fileName, product)
+}
+
+// 生成html静态文件
+func generateStaticHtml(ctx iris.Context, template *template.Template, fileName string, product *model.Product) {
+	//1.判断静态文件是否存在
+	if exist(fileName) {
+		err := os.Remove(fileName)
+		if err != nil {
+			ctx.Application().Logger().Error(err)
+		}
+	}
+	//2.生成静态文件
+	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, os.ModePerm)
+	if err != nil {
+		ctx.Application().Logger().Error(err)
+	}
+	defer file.Close()
+	template.Execute(file, &product)
+}
+
+// 判断文件是否存在
+func exist(fileName string) bool {
+	_, err := os.Stat(fileName)
+	return err == nil || os.IsExist(err)
+}
 
 type ProductController struct {
 	Ctx            iris.Context

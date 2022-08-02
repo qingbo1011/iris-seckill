@@ -25,9 +25,8 @@ func main() {
 	app.RegisterView(tmplate)
 	//4.设置模板
 	app.HandleDir("/public", "./front/web/public")
-	//访问生成好的html静态文件
-	app.HandleDir("/html", "./front/web/htmlProductShow")
-	//出现异常跳转到指定页面
+	app.HandleDir("/html", "./front/web/htmlProductShow") // 访问生成好的html静态文件
+	// 出现异常跳转到指定页面
 	app.OnAnyErrorCode(func(ctx iris.Context) {
 		ctx.ViewData("message", ctx.Values().GetStringDefault("message", "访问的页面出错！"))
 		ctx.ViewLayout("")
