@@ -11,5 +11,6 @@ func TestConfig(t *testing.T) {
 	fmt.Println(conf.IrisAddrBackend)
 	fmt.Println(conf.MysqlHost)
 	fmt.Println(conf.RedisHost)
-
+	fmt.Println(conf.RabbitMQUser)
+	fmt.Println(conf.RabbitMQHost)
 }

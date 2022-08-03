@@ -2,13 +2,12 @@ package simple
 
 import (
 	"fmt"
+	"iris-seckill/conf"
 	"log"
+	"strings"
 
 	"github.com/streadway/amqp"
 )
-
-// 连接信息amqp://用户名:密码@ip/Virtual Hosts
-const rmqURL = "amqp://qingbo:qingbo@43.138.57.192:5672/qingbo"
 
 // Rabbit RabbitMQ结构体
 type Rabbit struct {
@@ -22,6 +21,13 @@ type Rabbit struct {
 
 // NewRabbitMQ 创建Rabbit结构体实例
 func NewRabbitMQ(queueName, exchange, key string) *Rabbit {
+	// rmqURL := "amqp://qingbo:qingbo@43.138.57.192:5672/qingbo"
+	var builder strings.Builder
+	s := []string{"amqp://", conf.RabbitMQUser, ":", conf.RabbitMQPassword, "@", conf.RabbitMQHost, "/", conf.RabbitMQVirtualHosts}
+	for _, str := range s {
+		builder.WriteString(str)
+	}
+	rmqURL := builder.String()
 	return &Rabbit{
 		QueueName: queueName,
 		Exchange:  exchange,
