@@ -23,6 +23,12 @@ var (
 	MysqlConnMaxLifetime time.Duration
 
 	RedisHost string
+
+	RabbitMQHost         string
+	RabbitMQPort         string
+	RabbitMQUser         string
+	RabbitMQPassword     string
+	RabbitMQVirtualHosts string
 )
 
 func Init(path string) {
@@ -34,6 +40,7 @@ func Init(path string) {
 	loadService(file)
 	loadMysql(file)
 	loadRedis(file)
+	loadRabbitMQ(file)
 }
 
 func loadService(file *ini.File) {
@@ -64,4 +71,16 @@ func loadRedis(file *ini.File) {
 		logging.Fatalln(err)
 	}
 	RedisHost = section.Key("RedisHost").String()
+}
+
+func loadRabbitMQ(file *ini.File) {
+	section, err := file.GetSection("rabbit")
+	if err != nil {
+		logging.Fatalln(err)
+	}
+	RabbitMQHost = section.Key("RabbitMQHost").String()
+	RabbitMQPort = section.Key("RabbitMQPort").String()
+	RabbitMQUser = section.Key("RabbitMQUser").String()
+	RabbitMQPassword = section.Key("RabbitMQPassword").String()
+	RabbitMQVirtualHosts = section.Key("RabbitMQVirtualHosts").String()
 }

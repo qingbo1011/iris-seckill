@@ -6,6 +6,7 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/kataras/iris/v12 v12.1.8
 	github.com/sirupsen/logrus v1.8.1
+	github.com/streadway/amqp v1.0.0
 	golang.org/x/crypto v0.0.0-20220507011949-2cf3adece122
 	gopkg.in/ini.v1 v1.66.6
 )
