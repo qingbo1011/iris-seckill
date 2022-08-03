@@ -91,7 +91,7 @@ func (p *ProductController) GetDetail() mvc.View {
 	}
 }
 
-// GetOrder 获取下订单页面
+// GetOrder 下订单
 func (p *ProductController) GetOrder() mvc.View {
 	productString := p.Ctx.URLParam("productID")
 	userString := p.Ctx.GetCookie("uid")
@@ -99,38 +99,48 @@ func (p *ProductController) GetOrder() mvc.View {
 	if err != nil {
 		p.Ctx.Application().Logger().Debug(err)
 	}
-	product, err := p.ProductService.GetProductByID(uint(productID))
+	userID, err := strconv.ParseUint(userString, 10, 0)
 	if err != nil {
 		p.Ctx.Application().Logger().Debug(err)
 	}
 
-	var orderID uint
-	showMessage := "抢购失败！"
-	// 判断商品数量是否满足需求
-	if product.ProductNum > 0 {
-		// 扣除商品数量
-		product.ProductNum = product.ProductNum - 1
-		err := p.ProductService.UpdateProduct(product)
-		if err != nil {
-			p.Ctx.Application().Logger().Debug(err)
-		}
-		// 创建订单
-		userID, err := strconv.Atoi(userString)
-		if err != nil {
-			p.Ctx.Application().Logger().Debug(err)
-		}
-		order := &model.Order{
-			UserID:      uint(userID),
-			ProductID:   uint(productID),
-			OrderStatus: model.OrderSuccess,
-		}
-		// 新建订单
-		orderID, err = p.OrderService.InsertOrder(order)
-		if err != nil {
-			p.Ctx.Application().Logger().Debug(err)
-		} else {
-			showMessage = "抢购成功！"
-		}
+
+
+	/* 引入RabbitMQ的下单逻辑 */
+
+	/* 旧的下单逻辑 */
+	//product, err := p.ProductService.GetProductByID(uint(productID))
+	//if err != nil {
+	//	p.Ctx.Application().Logger().Debug(err)
+	//}
+	//
+	//var orderID uint
+	//showMessage := "抢购失败！"
+	//// 判断商品数量是否满足需求
+	//if product.ProductNum > 0 {
+	//	// 扣除商品数量
+	//	product.ProductNum = product.ProductNum - 1
+	//	err := p.ProductService.UpdateProduct(product)
+	//	if err != nil {
+	//		p.Ctx.Application().Logger().Debug(err)
+	//	}
+	//	// 创建订单
+	//	userID, err := strconv.Atoi(userString)
+	//	if err != nil {
+	//		p.Ctx.Application().Logger().Debug(err)
+	//	}
+	//	order := &model.Order{
+	//		UserID:      uint(userID),
+	//		ProductID:   uint(productID),
+	//		OrderStatus: model.OrderSuccess,
+	//	}
+	//	// 新建订单
+	//	orderID, err = p.OrderService.InsertOrder(order)
+	//	if err != nil {
+	//		p.Ctx.Application().Logger().Debug(err)
+	//	} else {
+	//		showMessage = "抢购成功！"
+	//	}
 	}
 
 	return mvc.View{
