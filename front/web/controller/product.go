@@ -2,6 +2,7 @@ package controller
 
 import (
 	"iris-seckill/model"
+	"iris-seckill/mq/rabbit"
 	"iris-seckill/service"
 	"os"
 	"path/filepath"
@@ -92,7 +93,7 @@ func (p *ProductController) GetDetail() mvc.View {
 }
 
 // GetOrder 下订单
-func (p *ProductController) GetOrder() mvc.View {
+func (p *ProductController) GetOrder() []byte {
 	productString := p.Ctx.URLParam("productID")
 	userString := p.Ctx.GetCookie("uid")
 	productID, err := strconv.Atoi(productString)
@@ -103,8 +104,9 @@ func (p *ProductController) GetOrder() mvc.View {
 	if err != nil {
 		p.Ctx.Application().Logger().Debug(err)
 	}
+	rabbit.NewMessage(uint(userID), uint(productID)) // 创建消息体
 
-
+	return []byte("true")
 
 	/* 引入RabbitMQ的下单逻辑 */
 
@@ -141,14 +143,13 @@ func (p *ProductController) GetOrder() mvc.View {
 	//	} else {
 	//		showMessage = "抢购成功！"
 	//	}
-	}
-
-	return mvc.View{
-		Layout: "shared/productLayout.html",
-		Name:   "product/result.html",
-		Data: iris.Map{
-			"orderID":     orderID,
-			"showMessage": showMessage,
-		},
-	}
+	//}
+	//return mvc.View{
+	//	Layout: "shared/productLayout.html",
+	//	Name:   "product/result.html",
+	//	Data: iris.Map{
+	//		"orderID":     orderID,
+	//		"showMessage": showMessage,
+	//	},
+	//}
 }
