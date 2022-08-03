@@ -3,6 +3,7 @@ package service
 import (
 	"iris-seckill/db/mysql"
 	"iris-seckill/model"
+	"iris-seckill/mq/rabbit"
 )
 
 type IOrderService interface {
@@ -12,6 +13,7 @@ type IOrderService interface {
 	InsertOrder(*model.Order) (uint, error)
 	GetAllOrder() ([]*model.Order, error)
 	GetAllOrderInfo() (map[uint]map[string]string, error)
+	InsertOrderByMessage(*rabbit.Message) (uint, error)
 }
 
 type OrderService struct {
@@ -61,4 +63,15 @@ func (o *OrderService) GetAllOrderInfo() (map[uint]map[string]string, error) {
 		orderMap[order.ID] = map[string]string{"用户名order.UserID": "产品order.ProductID"}
 	}
 	return orderMap, nil
+}
+
+// InsertOrderByMessage 根据消息队列中消费的消息来创建订单
+func (o *OrderService) InsertOrderByMessage(message *rabbit.Message) (uint, error) {
+	order := model.Order{
+		UserID:      message.UserID,
+		ProductID:   message.ProductID,
+		OrderStatus: model.OrderSuccess,
+	}
+	err := mysql.MysqlDB.Create(&order).Error
+	return order.ID, err
 }

@@ -11,6 +11,7 @@ type IProductService interface {
 	DeleteProductByID(uint) error
 	InsertProduct(product *model.Product) (uint, error)
 	UpdateProduct(product *model.Product) error
+	SubNumberOne(productID uint) error
 }
 
 type ProductService struct {
@@ -49,5 +50,14 @@ func (p *ProductService) InsertProduct(product *model.Product) (uint, error) {
 // UpdateProduct 更新产品
 func (p *ProductService) UpdateProduct(product *model.Product) error {
 	err := mysql.MysqlDB.Model(&model.Product{}).Where("product_name = ?", product.ProductName).Updates(product).Error
+	return err
+}
+
+// SubNumberOne 对指定productID的产品数量-1
+func (p *ProductService) SubNumberOne(productID uint) error {
+	var product model.Product
+	mysql.MysqlDB.First(&product, productID)
+	product.ProductNum--
+	err := mysql.MysqlDB.Model(&model.Product{}).Updates(product).Error
 	return err
 }

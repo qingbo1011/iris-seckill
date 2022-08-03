@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"encoding/json"
 	"iris-seckill/model"
 	"iris-seckill/mq/rabbit"
+	"iris-seckill/mq/rabbit/simple"
 	"iris-seckill/service"
 	"os"
 	"path/filepath"
@@ -74,6 +76,7 @@ type ProductController struct {
 	Ctx            iris.Context
 	ProductService service.IProductService
 	OrderService   service.IOrderService
+	RabbitMQ       *simple.Rabbit
 	Session        *sessions.Session
 }
 
@@ -100,15 +103,22 @@ func (p *ProductController) GetOrder() []byte {
 	if err != nil {
 		p.Ctx.Application().Logger().Debug(err)
 	}
+	/* 引入RabbitMQ的下单逻辑 */
 	userID, err := strconv.ParseUint(userString, 10, 0)
 	if err != nil {
 		p.Ctx.Application().Logger().Debug(err)
 	}
-	rabbit.NewMessage(uint(userID), uint(productID)) // 创建消息体
+	message := rabbit.NewMessage(uint(userID), uint(productID)) // 创建消息体
+	messageBytes, err := json.Marshal(message)
+	if err != nil {
+		p.Ctx.Application().Logger().Debug(err)
+	}
+	err = p.RabbitMQ.PublishSimple(string(messageBytes))
+	if err != nil {
+		p.Ctx.Application().Logger().Debug(err)
+	}
 
 	return []byte("true")
-
-	/* 引入RabbitMQ的下单逻辑 */
 
 	/* 旧的下单逻辑 */
 	//product, err := p.ProductService.GetProductByID(uint(productID))

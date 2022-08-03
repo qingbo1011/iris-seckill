@@ -1,8 +1,11 @@
 package simple
 
 import (
+	"encoding/json"
 	"fmt"
 	"iris-seckill/conf"
+	"iris-seckill/mq/rabbit"
+	"iris-seckill/service"
 	"log"
 	"strings"
 
@@ -62,7 +65,7 @@ func NewRabbitMQSimple(queueName string) *Rabbit {
 }
 
 // PublishSimple Simple模式 生产者
-func (r Rabbit) PublishSimple(msg string) {
+func (r Rabbit) PublishSimple(msg string) error {
 	// 1.申请队列，如果队列不存在会自动创建，存在则跳过创建
 	_, err := r.channel.QueueDeclare(
 		r.QueueName, // 队列名
@@ -74,6 +77,7 @@ func (r Rabbit) PublishSimple(msg string) {
 	)
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 	// 2.调用channel 发送消息到队列中
 	err = r.channel.Publish(
@@ -88,11 +92,13 @@ func (r Rabbit) PublishSimple(msg string) {
 	)
 	if err != nil {
 		log.Println(err)
+		return err
 	}
+	return nil
 }
 
 // ConsumeSimple Simple模式 消费者
-func (r Rabbit) ConsumeSimple() {
+func (r Rabbit) ConsumeSimple(orderService service.IOrderService, productService service.IProductService) {
 	// 1.申请队列，如果队列不存在会自动创建，存在则跳过创建
 	queue, err := r.channel.QueueDeclare(
 		r.QueueName, // 队列名
@@ -105,11 +111,19 @@ func (r Rabbit) ConsumeSimple() {
 	if err != nil {
 		log.Println(err)
 	}
+
+	// 消费者流量控制
+	r.channel.Qos(
+		1,     // 当前消费者一次能接受的最大消息数量
+		0,     // 服务器传递的最大容量（以八位字节为单位）
+		false, // 如果设置为true 对全局channel可用
+	)
+
 	// 2.消费消息
 	msgs, err := r.channel.Consume(
 		queue.Name, // 队列名称
 		"",         // 用来区分多个消费者
-		true,       // 是否自动应答
+		false,      // 是否自动应答
 		false,      // 是否独有
 		false,      // 设置为true，表示不能将同一个Connection中生产者发送的消息传递给这个Connection中的消费者
 		false,      // 队列是否阻塞
@@ -125,6 +139,21 @@ func (r Rabbit) ConsumeSimple() {
 		for delivery := range msgs {
 			// 消息逻辑处理，可以自行设计逻辑
 			fmt.Println("Received a message:", string(delivery.Body))
+			message := &rabbit.Message{}
+			err = json.Unmarshal([]byte(delivery.Body), message)
+			if err != nil {
+				log.Println(err)
+			}
+			_, err = orderService.InsertOrderByMessage(message) // 插入订单
+			if err != nil {
+				log.Println(err)
+			}
+			err = productService.SubNumberOne(message.ProductID) // 扣除商品数量
+			if err != nil {
+				log.Println(err)
+			}
+
+			delivery.Ack(false) // 如果为true表示确认所有未确认的消息;为false则表示确认当前消息
 		}
 	}()
 	fmt.Println(" [*] Waiting for messages.")

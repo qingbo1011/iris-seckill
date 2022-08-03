@@ -78,6 +78,6 @@ func (c *UserController) PostLogin() mvc.Response {
 	util.GlobalCookie(c.Ctx, "sign", uidString) // 写入用户浏览器
 
 	return mvc.Response{
-		Path: "/product/",
+		Path: "/product/detail",
 	}
 }

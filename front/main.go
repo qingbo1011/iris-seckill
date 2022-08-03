@@ -6,6 +6,7 @@ import (
 	"iris-seckill/db/mysql"
 	"iris-seckill/front/middleware"
 	"iris-seckill/front/web/controller"
+	"iris-seckill/mq/rabbit/simple"
 	"iris-seckill/service"
 
 	"github.com/kataras/iris/v12"
@@ -40,12 +41,14 @@ func main() {
 	userApp.Register(userService, ctx)
 	userApp.Handle(new(controller.UserController))
 
+	rabbitmq := simple.NewRabbitMQSimple("sec-kill")
+
 	productService := service.NewProductService()
 	orderService := service.NewOrderService()
 	productParty := app.Party("/product")
 	productParty.Use(middleware.AuthConProduct)
 	productApp := mvc.New(productParty)
-	productApp.Register(productService, orderService)
+	productApp.Register(productService, orderService, rabbitmq)
 	productApp.Handle(new(controller.ProductController))
 
 	// 启动服务

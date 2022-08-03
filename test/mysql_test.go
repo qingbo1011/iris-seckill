@@ -5,6 +5,7 @@ import (
 	"iris-seckill/conf"
 	"iris-seckill/db/mysql"
 	"iris-seckill/model"
+	"iris-seckill/service"
 	"testing"
 
 	logging "github.com/sirupsen/logrus"
@@ -33,10 +34,10 @@ func TestDeleteProductByID(t *testing.T) {
 
 func TestInsertProduct(t *testing.T) {
 	p := model.Product{
-		ProductName:     "test",
-		ProductNum:      1,
-		ProductImageUrl: "test",
-		ProductUrl:      "test",
+		ProductName:     "test6",
+		ProductNum:      22,
+		ProductImageUrl: "test6",
+		ProductUrl:      "test6",
 	}
 	err := mysql.MysqlDB.Create(&p).Error
 	if err != nil {
@@ -76,4 +77,12 @@ func TestSelectUserByName(t *testing.T) {
 		logging.Info(err)
 	}
 	fmt.Println(user)
+}
+
+func TestProductSubNumberOne(t *testing.T) {
+	productService := service.NewProductService()
+	err := productService.SubNumberOne(8)
+	if err != nil {
+		logging.Info(err)
+	}
 }
