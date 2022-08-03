@@ -1,6 +1,8 @@
 package main
 
 import (
+	"iris-seckill/conf"
+	"iris-seckill/db/mysql"
 	"iris-seckill/mq/rabbit/simple"
 	"iris-seckill/service"
 )
@@ -11,4 +13,9 @@ func main() {
 	rabbitMQSimple := simple.NewRabbitMQSimple("sec-kill")
 
 	rabbitMQSimple.ConsumeSimple(orderService, productService)
+}
+
+func init() {
+	conf.Init("./conf/config.ini")
+	mysql.Init()
 }
